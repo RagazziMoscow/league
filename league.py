@@ -14,8 +14,8 @@ def change_table():
 def simulate_match(masters, guests):
     masters_team = {"name": masters, "goals": randint(0, 10)}
     guests_team = {"name": guests, "goals": randint(0, 10)}
-    match = {"home": masters_team, "away": guests_team}
-    return match
+    match_results = {"home": masters_team, "away": guests_team}
+    return match_results
 
 
 def print_season_results():
