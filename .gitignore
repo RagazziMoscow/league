@@ -1,6 +1,6 @@
-<<<<<<< HEAD
+# npm-dependencies
 node_modules
-=======
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -102,4 +102,4 @@ ENV/
 
 # mypy
 .mypy_cache/
->>>>>>> origin/master
+
