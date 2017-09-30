@@ -1,4 +1,6 @@
 from random import randint
+from terminaltables import AsciiTable
+
 
 TEAMS_LIST = ['Наполи', 'Ювентус', 'Интер',
               'Лацио', 'Рома', 'Милан',
@@ -39,12 +41,6 @@ def change_table(match_results):
     SEASON_TABLE[guests_name]["stat"]["matches"] += 1
 
 
-def sort_table():
-    season_list = sorted(list(SEASON_TABLE.values()), key=lambda x: x[
-                         "stat"]["points"], reverse=True)
-    return season_list
-
-
 def simulate_match(masters, guests):
     masters_goals = randint(0, 10)
     guests_goals = randint(0, 10)
@@ -57,18 +53,29 @@ def simulate_match(masters, guests):
 
 
 def print_season_results():
-    season_list = sort_table()
-    print("N  Клуб Игры Победы Ничьи Поражения Мячи Очки")
+    season_list = sorted(list(SEASON_TABLE.values()),
+                         key=lambda x: x["stat"]["points"],
+                         reverse=True)
+    headers = ['N', 'Клуб', 'Игры', 'Победы',
+               'Ничьи', 'Поражения', 'Мячи', 'Очки']
+    table_data = [headers]
+
     for number, team in enumerate(season_list):
         matches_count = team["stat"]["matches"]
         wins = team["stat"]["wins"]
         losses = team["stat"]["losses"]
         drawns = matches_count - wins - losses
-        goals_count = team["stat"]["goals"]
+        goals_all = "{0} - {1}".format(team["stat"]
+                                       ["goals"], team['stat']['goals_conceded'])
         points = team["stat"]["points"]
+        team_point = [number, team['name'], matches_count,
+                      wins, drawns, losses, goals_all, points]
 
-        print("{0} {1} {2} {3} {4} {5} {6} {7}".format(
-            number, team["name"], matches_count, wins, drawns, losses, goals_count, points))
+        table_data.append(team_point)
+
+    table = AsciiTable(table_data)
+    table.padding_left = 3
+    print(table.table)
 
 
 def _main():
