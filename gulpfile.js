@@ -6,7 +6,7 @@ gulp.task('default', ['start', 'watch']);
 gulp.task('start', shell.task(['python league.py']));
 
 gulp.task('watch', () => {
-  return gulp.watch('league.py', ['reload'])
+  return gulp.watch('league.py', ['start'])
 });
 
 gulp.task('reload', () => {

@@ -11,6 +11,17 @@ TEAMS_LIST = ['Наполи', 'Ювентус', 'Интер',
 SEASON_TABLE = {}
 
 
+def simulate_match(masters, guests):
+    masters_goals = randint(0, 10)
+    guests_goals = randint(0, 10)
+
+    masters_team = {"name": masters, "goals": masters_goals}
+    guests_team = {"name": guests, "goals": guests_goals}
+    match_results = {"home": masters_team, "away": guests_team}
+
+    return match_results
+
+
 def change_table(match_results):
     masters = match_results["home"]
     guests = match_results["away"]
@@ -39,17 +50,6 @@ def change_table(match_results):
 
     SEASON_TABLE[masters_name]["stat"]["matches"] += 1
     SEASON_TABLE[guests_name]["stat"]["matches"] += 1
-
-
-def simulate_match(masters, guests):
-    masters_goals = randint(0, 10)
-    guests_goals = randint(0, 10)
-
-    masters_team = {"name": masters, "goals": masters_goals}
-    guests_team = {"name": guests, "goals": guests_goals}
-    match_results = {"home": masters_team, "away": guests_team}
-
-    return match_results
 
 
 def print_season_results():
@@ -86,8 +86,19 @@ def _main():
         team_point = {"name": team, "stat": team_statistics}
         SEASON_TABLE[team] = team_point
 
-    change_table(simulate_match(TEAMS_LIST[3], TEAMS_LIST[6]))
-    print_season_results()
+    for round, team_in_round in enumerate(TEAMS_LIST):
+        if round + 1 > 12: break
+        print('Тур {0}'.format(round + 1))
+
+        for team in TEAMS_LIST:
+            if team == team_in_round:
+                continue
+            print('Матч: {0}-{1}'.format(team, team_in_round))
+            # Изменение в таблице после каждого матча
+            match_results = simulate_match(team, team_in_round)
+            change_table(match_results)
+
+    print_season_results()  # Результаты в конце сезона
 
 
 if __name__ == '__main__':
