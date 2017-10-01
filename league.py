@@ -4,9 +4,8 @@ from terminaltables import AsciiTable
 
 TEAMS_LIST = ['Наполи', 'Ювентус', 'Интер',
               'Лацио', 'Рома', 'Милан',
-              'Сампдория', 'Торино', 'Аталанта',
-              'Кьево', 'Болонья', 'Фиорентина',
-              'Дженова']
+              'Торино', 'Аталанта', 'Кьево',
+              'Болонья', 'Фиорентина', 'Дженова']
 
 SEASON_TABLE = {}
 
@@ -25,31 +24,26 @@ def simulate_match(masters, guests):
 def change_table(match_results):
     masters = match_results["home"]
     guests = match_results["away"]
-    masters_name = masters["name"]
-    guests_name = guests["name"]
-    masters_goals = masters["goals"]
-    guests_goals = guests["goals"]
 
-    SEASON_TABLE[masters_name]["stat"]["goals"] += masters_goals
-    SEASON_TABLE[masters_name]["stat"]["goals_conceded"] += guests_goals
-    SEASON_TABLE[guests_name]["stat"]["goals"] += guests_goals
-    SEASON_TABLE[guests_name]["stat"]["goals_conceded"] += masters_goals
+    winner = max(masters, guests, key=lambda x: x["goals"])
+    loser = min(masters, guests, key=lambda x: x["goals"])
 
-    if masters_goals != guests_goals:
-        if masters_goals > guests_goals:
-            SEASON_TABLE[masters_name]["stat"]["wins"] += 1
-            SEASON_TABLE[guests_name]["stat"]["losses"] += 1
-            SEASON_TABLE[masters_name]["stat"]["points"] += 3
-        else:
-            SEASON_TABLE[masters_name]["stat"]["losses"] += 1
-            SEASON_TABLE[guests_name]["stat"]["wins"] += 1
-            SEASON_TABLE[guests_name]["stat"]["points"] += 3
+    SEASON_TABLE[winner["name"]]["stat"]["matches"] += 1
+    SEASON_TABLE[loser["name"]]["stat"]["matches"] += 1
+
+    SEASON_TABLE[winner["name"]]["stat"]["goals"] += winner["goals"]
+    SEASON_TABLE[winner["name"]]["stat"]["goals_conceded"] += loser["goals"]
+
+    SEASON_TABLE[loser["name"]]["stat"]["goals"] += loser["goals"]
+    SEASON_TABLE[loser["name"]]["stat"]["goals_conceded"] += winner["goals"]
+
+    if winner["goals"] == loser["goals"]:
+        SEASON_TABLE[winner["name"]]["stat"]["points"] += 1
+        SEASON_TABLE[loser["name"]]["stat"]["points"] += 1
     else:
-        SEASON_TABLE[masters_name]["stat"]["points"] += 1
-        SEASON_TABLE[guests_name]["stat"]["points"] += 1
-
-    SEASON_TABLE[masters_name]["stat"]["matches"] += 1
-    SEASON_TABLE[guests_name]["stat"]["matches"] += 1
+        SEASON_TABLE[winner["name"]]["stat"]["wins"] += 1
+        SEASON_TABLE[loser["name"]]["stat"]["losses"] += 1
+        SEASON_TABLE[winner["name"]]["stat"]["points"] += 3
 
 
 def print_season_results():
@@ -68,7 +62,7 @@ def print_season_results():
         goals_all = "{0} - {1}".format(team["stat"]
                                        ["goals"], team['stat']['goals_conceded'])
         points = team["stat"]["points"]
-        team_point = [number, team['name'], matches_count,
+        team_point = [number + 1, team['name'], matches_count,
                       wins, drawns, losses, goals_all, points]
 
         table_data.append(team_point)
@@ -87,7 +81,8 @@ def _main():
         SEASON_TABLE[team] = team_point
 
     for round, team_in_round in enumerate(TEAMS_LIST):
-        if round + 1 > 12: break
+        if round + 1 > 12:
+            break
         print('Тур {0}'.format(round + 1))
 
         for team in TEAMS_LIST:
@@ -97,6 +92,7 @@ def _main():
             # Изменение в таблице после каждого матча
             match_results = simulate_match(team, team_in_round)
             change_table(match_results)
+        print_season_results()
 
     print_season_results()  # Результаты в конце сезона
 
