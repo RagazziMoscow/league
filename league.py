@@ -2,12 +2,9 @@ from random import randint
 from terminaltables import AsciiTable
 
 
-TEAMS_LIST = ['Наполи', 'Ювентус', 'Интер',
-              'Лацио', 'Рома', 'Милан',
-              'Торино', 'Аталанта', 'Кьево',
-              'Болонья', 'Фиорентина', 'Дженова']
-RESULTS = []
-SEASON_TABLE = {}
+TEAMS_LIST = []  # Список участвющих клубов
+RESULTS = []  # Все результаты матчей в лиге
+SEASON_TABLE = {}  # Турнирная таблица
 
 
 def simulate_match(masters, guests):
@@ -37,6 +34,7 @@ def change_table(match_results):
     winner = max(masters, guests, key=lambda x: x['goals'])
     loser = min(masters, guests, key=lambda x: x['goals'])
 
+    # В зависимости от исхода матча прибавляем очки
     if winner["goals"] == loser['goals']:
         SEASON_TABLE[masters['name']]['stat']['points'] += 1
         SEASON_TABLE[guests['name']]['stat']['points'] += 1
@@ -74,8 +72,10 @@ def print_season_results():
 
 def _main():
 
+    TEAMS_LIST = input('Введите команды через пробел\n').split()
+
     for number, team in enumerate(TEAMS_LIST):
-      
+
         team_statistics = {'place': number, 'matches': 0,
                            'wins': 0, 'losses': 0,
                            'goals': 0, 'goals_conceded': 0,
@@ -91,6 +91,10 @@ def _main():
 
             match_results = simulate_match(masters, guests)
             change_table(match_results)
+            RESULTS.append('{0} {2}-{3} {1}'.format(masters, guests,
+                                                    match_results[
+                                                        'home']['goals'],
+                                                    match_results['home']['goals']))
             # print(masters, guests)
 
     print_season_results()  # Результаты в конце сезона
