@@ -1,5 +1,6 @@
 from random import randint
 from terminaltables import AsciiTable
+from colors import color
 
 
 TEAMS_LIST = []  # Список участвющих клубов
@@ -63,10 +64,16 @@ def print_season_results():
         team_point = [number + 1, team['name'], matches_count,
                       wins, drawns, losses, goals_all, points]
 
+        # Для первых двух мест в табоице раскрашиваем текст
+        if number in range(0, 2):
+            for stat_point in range(0, len(team_point)):
+                team_point[stat_point] = color(str(team_point[stat_point]),
+                                               fg='#ff4a4a')
+
         table_data.append(team_point)
 
     table = AsciiTable(table_data)
-    table.padding_left = 3
+    table.padding_left = 2
     print(table.table)
 
 
