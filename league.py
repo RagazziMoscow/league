@@ -68,9 +68,29 @@ def print_season_results():
         if number in range(0, 2):
             for stat_point in range(0, len(team_point)):
                 team_point[stat_point] = color(str(team_point[stat_point]),
-                                               fg='#ff4a4a')
+                                               fg='yellow')
 
         table_data.append(team_point)
+
+    table = AsciiTable(table_data)
+    table.padding_left = 2
+    print(table.table)
+
+
+def print_all_results():
+    headers = [color('Хозяева', fg='green'),
+               color('Результат', fg='green'),
+               color('Гости', fg='green')]
+    table_data = [headers]
+
+    for result in RESULTS:
+        result_info = result.split(' ')
+        masters = result_info[0]
+        guests = result_info[2]
+        numbers = result_info[1]
+
+        result_line = [masters, color(numbers, fg='yellow'), guests]
+        table_data.append(result_line)
 
     table = AsciiTable(table_data)
     table.padding_left = 2
